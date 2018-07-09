@@ -53,7 +53,8 @@ podTemplate(label: label, cloud: 'openshift', containers: [
           stage ('build image') {
             
               sh '''                
-                oc start-build scripts-openshift --from-dir=. --follow
+                oc start-build app-frontend-ssvida --follow
+                oc tag app-frontend-ssvida:latest app-frontend-ssvida:2.0
               '''
             
           }

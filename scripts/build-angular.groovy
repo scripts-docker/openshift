@@ -9,9 +9,8 @@ podTemplate(label: label, cloud: 'openshift', containers: [
       container('jnlp') {
 
           stage ('checkout'){
-                      
-               git 'https://github.com/marcelolucio1982/angular-5-example.git'
-                sh 'node -v'
+
+              git 'https://github.com/marcelolucio1982/angular-5-example.git'
             
           }
           stage ('install modules'){
@@ -38,11 +37,21 @@ podTemplate(label: label, cloud: 'openshift', containers: [
               sh '$(npm bin)/ng build --prod --build-optimizer'
             
           }
-          stage ('build image') {
+
+          stage ('publica nexus') {
             
               sh '''
-                rm -rf node_modules
-                ls -lha
+                curl -o $HOME/.npmrc https://raw.githubusercontent.com/scripts-docker/openshift/master/.npmrc
+                cat $HOME/.npmrc
+                cp package.json dist/
+                cd dist && npm publish
+              '''
+            
+          }
+
+          stage ('build image') {
+            
+              sh '''                
                 oc start-build scripts-openshift --from-dir=. --follow
               '''
             

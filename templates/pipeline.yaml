@@ -35,6 +35,9 @@ parameters:
 - displayName: URL Repositório Nexus
   name: URL_REPOSITORIO_NEXUS
   required: true
+- displayName: URL Repositorio Aplicacacao
+  name: URL_REPOSITORIO_APP
+  required: true
 - description: The OpenShift Namespace where the NodeJS and MongoDB ImageStreams reside.
   displayName: Namespace
   name: NAMESPACE
@@ -52,10 +55,10 @@ objects:
   spec:
     strategy:
       jenkinsPipelineStrategy:
-        jenkinsfilePath: jenkins/Jenkinsfile
+        jenkinsfilePath: scripts/build-angular.groovy
     source:
     git:
-      uri: "https://github.com/marcelolucio1982/scripts-openshift.git"
+      uri: "https://github.com/scripts-docker/openshift.git"
 #- apiVersion: v1
 #  kind: Service
 #  metadata:

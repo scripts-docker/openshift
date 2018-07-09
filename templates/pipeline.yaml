@@ -1,0 +1,124 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: pipeline de aplicações angular e springboot
+message: |-
+  A Jenkins server will be automatically instantiated in this project to manage
+  the Pipeline BuildConfig created by this template.  You will be able to log in to
+  it using your OpenShift user credentials.
+metadata:
+  annotations:
+    openshift.io/display-name: Pipeline Angular Springboot
+    description: |-
+      This example showcases the new Jenkins Pipeline integration in OpenShift,
+      which performs continuous integration and deployment right on the platform.
+      The template contains a Jenkinsfile - a definition of a multi-stage CI/CD process - that
+      leverages the underlying OpenShift platform for dynamic and scalable
+      builds. OpenShift integrates the status of your pipeline builds into the web
+      console allowing you to see your entire application lifecycle in a single view.
+    iconClass: icon-jenkins
+    tags: instant-app,jenkins
+  name: jenkins-pipeline-angular-springboot
+parameters:
+- description: The name assigned to all of the frontend objects defined in this template.
+  displayName: Nome da aplicação
+  name: NOME_APLICACAO
+  required: true
+- description: The exposed hostname that will route to the Node.js service, if left
+    blank a value will be defaulted.
+  displayName: Application Hostname
+  name: DOMINIO_APLICACAO
+- description: The URL of the repository with your application source code.
+  displayName: TAG
+  name: TAG
+  required: true
+- displayName: URL Repositório Nexus
+  name: URL_REPOSITORIO_NEXUS
+  required: true
+- description: The OpenShift Namespace where the NodeJS and MongoDB ImageStreams reside.
+  displayName: Namespace
+  name: NAMESPACE
+  required: true
+  value: openshift
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      pipeline.alpha.openshift.io/uses: '[{"name": "${NAME}", "namespace": "${NAMESPACE}", "kind": "DeploymentConfig"}]'
+    labels:
+      name: pipeline
+    name: pipeline
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: jenkins/Jenkinsfile
+    source:
+    git:
+      uri: "https://github.com/marcelolucio1982/scripts-openshift.git"
+#- apiVersion: v1
+#  kind: Service
+#  metadata:
+#    annotations:
+#      service.alpha.openshift.io/dependencies: '[{"name": "${NAME}", "namespace": "${NAMESPACE}", "kind": "Service"}]'
+#    name: ${NAME}
+#  spec:
+#    ports:
+#    - name: web
+#      port: 8080
+#      targetPort: 8080
+#    selector:
+#      name: ${NAME}
+#- apiVersion: v1
+#  kind: Route
+#  metadata:
+#    name: ${NAME}
+#  spec:
+#    host: ${DOMINIO_APLICACAO}
+#    to:
+#      kind: Service
+#      name: ${NAME}
+#- apiVersion: v1
+#  kind: ImageStream
+#  metadata:
+#    annotations:
+#      description: Keeps track of changes in the application image
+#    name: ${NAME}
+#- apiVersion: v1
+#  kind: DeploymentConfig
+#  metadata:
+#    annotations:
+#      description: Defines how to deploy the application server
+#    name: ${NAME}
+#  spec:
+#    replicas: 1
+#    selector:
+#      name: ${NAME}
+#    strategy:
+#      type: Rolling
+#    template:
+#      metadata:
+#        labels:
+#          name: ${NAME}
+#        name: ${NAME}
+#      spec:
+#        containers:
+#        - env:
+#          - name: AMBIENTE
+#            value: ${AMBIENTE}
+#          image: ' '
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: 8080
+#            initialDelaySeconds: 30
+#            timeoutSeconds: 3
+#          name: nodejs-mongodb-example
+#          ports:
+#          - containerPort: 8080
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: 8080
+#            initialDelaySeconds: 3
+#            timeoutSeconds: 3  

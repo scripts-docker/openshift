@@ -26,7 +26,7 @@ parameters:
   required: true
 - description: The exposed hostname that will route to the Node.js service, if left
     blank a value will be defaulted.
-  displayName: Application Hostname
+  displayName: Domínio da Aplicação
   name: DOMINIO_APLICACAO
 - description: The URL of the repository with your application source code.
   displayName: TAG

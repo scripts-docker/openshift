@@ -50,8 +50,8 @@ objects:
     annotations:
       pipeline.alpha.openshift.io/uses: '[{"name": "${NAME}", "namespace": "${NAMESPACE}", "kind": "DeploymentConfig"}]'
     labels:
-      name: ${NAME}
-    name: ${NAME}
+      name: "${NAME}"
+    name: "${NAME}"
   spec:
     strategy:
       jenkinsPipelineStrategy:

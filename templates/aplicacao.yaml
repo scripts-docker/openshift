@@ -29,8 +29,13 @@ parameters:
   name: NAMESPACE
   required: true
   value: openshift
+- description: Repositório de configuração do projeto.
+  displayName: Respositório de configuração
+  name: URL_REPOSITORIO_CONFIG
+  required: true
 objects:
-- kind: BuildConfig
+- apiVersion: v1
+  kind: BuildConfig
   metadata:
     labels:
       app: ${NOME_APLICACAO}
@@ -45,7 +50,7 @@ objects:
     source:
       git:
         ref: master
-        uri: https://github.com/scripts-docker/app-frontend.git
+        uri: ${URL_REPOSITORIO_CONFIG}
       contextDir: ${NOME_APLICACAO}/
       type: Git
     strategy:

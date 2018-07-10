@@ -48,10 +48,10 @@ objects:
   kind: BuildConfig
   metadata:
     annotations:
-      pipeline.alpha.openshift.io/uses: '[{"name": "${NAME}", "namespace": "${NAMESPACE}", "kind": "DeploymentConfig"}]'
+      pipeline.alpha.openshift.io/uses: '[{"name": "${NOME_APLICACAO}", "namespace": "${NAMESPACE}", "kind": "DeploymentConfig"}]'
     labels:
-      name: "${NAME}"
-    name: "${NAME}"
+      name: ${NOME_APLICACAO}
+    name: ${NOME_APLICACAO}
   spec:
     strategy:
       jenkinsPipelineStrategy:

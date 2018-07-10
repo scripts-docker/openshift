@@ -4,7 +4,7 @@ import groovy.transform.Field
 def label = "pod-angular-${UUID.randomUUID().toString()}"
 
 @Field
-def json = null
+def jsonMap = null
 
 podTemplate(label: label, cloud: 'openshift', containers: [    
     containerTemplate(image: 'docker.io/petenorth/nodejs8-openshift-slave', ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
@@ -18,9 +18,9 @@ podTemplate(label: label, cloud: 'openshift', containers: [
             git "${URL_REPOSITORIO_APP}"
 
             def packageJson = readFile(file:'package.json')
-            json = new JsonSlurperClassic().parseText(packageJson)
+            jsonMap = new JsonSlurperClassic().parseText(packageJson)
 
-            json.version = "${VERSAO}"
+            jsonMap.version = "${VERSAO}"
             
           }
           stage ('install modules'){
@@ -50,7 +50,10 @@ podTemplate(label: label, cloud: 'openshift', containers: [
 
           stage ('publica nexus') {
 
-              writeJSON(file: 'package.json', json: json)
+            def json = JsonOutput.toJson(jsonMap)
+            json = JsonOutput.prettyPrint(json)
+
+            writeFile(file:'package.json', text: json)
             
               sh '''
                 curl -o $HOME/.npmrc https://raw.githubusercontent.com/scripts-docker/openshift/master/.npmrc

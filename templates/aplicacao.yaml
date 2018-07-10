@@ -24,11 +24,6 @@ parameters:
   displayName: Nome da aplicação
   name: NOME_APLICACAO
   required: true
-- description: The exposed hostname that will route to the Node.js service, if left
-    blank a value will be defaulted.
-  displayName: Domínio da Aplicação
-  name: DOMINIO_APLICACAO
-  required: true
 - description: The OpenShift Namespace where the NodeJS and MongoDB ImageStreams reside.
   displayName: Namespace
   name: NAMESPACE
@@ -50,7 +45,7 @@ objects:
     source:
       git:
         ref: master
-        uri: https://github.com/weepee-org/openshift-example-project.git
+        uri: https://github.com/scripts-docker/app-frontend.git
       contextDir: ${NOME_APLICACAO}/
       type: Git
     strategy:

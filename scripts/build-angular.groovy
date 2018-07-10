@@ -57,8 +57,6 @@ podTemplate(label: label, cloud: 'openshift', containers: [
             
               sh '''
                 curl -o $HOME/.npmrc https://raw.githubusercontent.com/scripts-docker/openshift/master/.npmrc
-                cat $HOME/.npmrc
-                cat package.json
                 cp package.json dist/
                 cd dist && npm publish
               '''
@@ -67,10 +65,8 @@ podTemplate(label: label, cloud: 'openshift', containers: [
 
           stage ('build image') {
             
-              sh '''                
-                oc start-build ${NOME_APLICACAO} --follow=true
-                oc tag ${NOME_APLICACAO}:latest app-frontend-ssvida:${VERSAO}
-              '''
+              sh "oc start-build ${NOME_APLICACAO} --follow=true"
+              sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
             
           }
                   

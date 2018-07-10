@@ -58,8 +58,9 @@ objects:
     name: ${NOME_APLICACAO}
   spec:
     ports:
-    - name: web
+    - name: 8080-tcp
       port: 8080
+      protocol: TCP
       targetPort: 8080
     selector:
       name: ${NOME_APLICACAO}

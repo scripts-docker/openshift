@@ -11,7 +11,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
           stage ('checkout'){
               sh "echo ${NOME_APLICACAO}"
               sh "echo ${URL_REPOSITORIO_APP}"
-              git 'https://github.com/marcelolucio1982/angular-5-example.git'
+              git "${URL_REPOSITORIO_APP}"
             
           }
           stage ('install modules'){
@@ -53,8 +53,8 @@ podTemplate(label: label, cloud: 'openshift', containers: [
           stage ('build image') {
             
               sh '''                
-                oc start-build app-frontend-ssvida --follow
-                oc tag app-frontend-ssvida:latest app-frontend-ssvida:2.0
+                oc start-build ${NOME_APLICACAO} --follow
+                oc tag ${NOME_APLICACAO}:latest app-frontend-ssvida:${VERSAO}
               '''
             
           }

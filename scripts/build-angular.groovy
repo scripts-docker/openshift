@@ -1,4 +1,4 @@
-import groovy.json.JsonSlurperClassic
+import groovy.json.*
 import groovy.transform.Field
 
 def label = "pod-angular-${UUID.randomUUID().toString()}"

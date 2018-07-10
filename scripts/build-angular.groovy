@@ -9,9 +9,6 @@ podTemplate(label: label, cloud: 'openshift', containers: [
       container('jnlp') {
 
           stage ('checkout'){
-              sh "echo ${NOME_APLICACAO}"
-              sh "echo ${URL_REPOSITORIO_APP}"
-              sh "echo ${VERSAO}"
               git "${URL_REPOSITORIO_APP}"
             
           }

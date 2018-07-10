@@ -28,15 +28,6 @@ parameters:
     blank a value will be defaulted.
   displayName: Domínio da Aplicação
   name: DOMINIO_APLICACAO
-- description: The URL of the repository with your application source code.
-  displayName: TAG
-  name: TAG
-  required: true
-- displayName: URL Repositório Nexus
-  name: URL_REPOSITORIO_NEXUS
-  required: true
-- displayName: URL Repositorio Aplicacacao
-  name: URL_REPOSITORIO_APP
   required: true
 - description: The OpenShift Namespace where the NodeJS and MongoDB ImageStreams reside.
   displayName: Namespace
@@ -106,9 +97,6 @@ objects:
 #        name: ${NAME}
 #      spec:
 #        containers:
-#        - env:
-#          - name: AMBIENTE
-#            value: ${AMBIENTE}
 #          image: ' '
 #          livenessProbe:
 #            httpGet:

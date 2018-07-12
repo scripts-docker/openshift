@@ -42,6 +42,12 @@ podTemplate(label: label, cloud: 'openshift', containers: [
               sh '$(npm bin)/ng lint'
             
           }
+
+        stage ('sonar') {
+              sh("printenv")
+              sh("sonar-scanner -Dsonar.tests=src/app -Dsonar.test.inclusions=**/*.spec.ts -Dsonar.ts.tslint.configPath=tslint.json -Dsonar.sources=src/app -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.host.url=http://172.30.11.175:9000 -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
+          }
+
           stage ('build') {
             
               sh '$(npm bin)/ng build --prod --build-optimizer'
@@ -61,12 +67,6 @@ podTemplate(label: label, cloud: 'openshift', containers: [
                 cd dist && npm publish
               '''
             
-          }
-
-          stage ('sonar') {
-              sh("printenv")
-              sh("ls -lha ${HOME}")
-              sh("sonar-scanner -Dsonar.tests=src/app -Dsonar.test.inclusions=**/*.spec.ts -Dsonar.ts.tslint.configPath=tslint.json -Dsonar.sources=src/app -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.host.url=http://172.30.11.175:9000 -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
           }
 
           stage ('build image') {

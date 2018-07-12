@@ -7,7 +7,7 @@ def label = "pod-angular-${UUID.randomUUID().toString()}"
 def jsonMap = null
 
 podTemplate(label: label, cloud: 'openshift', containers: [    
-    containerTemplate(image: 'docker.io/petenorth/nodejs8-openshift-slave', ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
+    containerTemplate(image: '172.30.1.1:5000/ci/nodejs8-slave', ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
   ]) {
 
   node(label) {   

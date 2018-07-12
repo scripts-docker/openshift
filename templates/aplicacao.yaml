@@ -51,7 +51,6 @@ objects:
       git:
         ref: master
         uri: ${URL_REPOSITORIO_CONFIG}
-      contextDir: ${NOME_APLICACAO}/
       type: Git
     strategy:
       dockerStrategy:

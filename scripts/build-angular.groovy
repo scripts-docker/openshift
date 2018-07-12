@@ -63,7 +63,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
             
           }
 
-          stage ('') {
+          stage ('sonar') {
 
               sh("sonar-scanner -Dsonar.host.url=http://172.30.11.175:9000 -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
           }

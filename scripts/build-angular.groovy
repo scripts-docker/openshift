@@ -14,7 +14,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
       
       container('jnlp') {
 
-          stage ('checkout'){
+         /* stage ('checkout'){
             git "${URL_REPOSITORIO_APP}"
 
             def packageJson = readFile(file:'package.json')
@@ -61,7 +61,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
                 cd dist && npm publish
               '''
             
-          }
+          }*/
 
           stage ('sonar') {
               sh("printenv")
@@ -69,12 +69,12 @@ podTemplate(label: label, cloud: 'openshift', containers: [
               sh("sonar-scanner -Dsonar.host.url=http://172.30.11.175:9000 -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
           }
 
-          stage ('build image') {
+          /*stage ('build image') {
             
               sh "oc start-build ${NOME_APLICACAO} --follow=true"
               sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
             
-          }
+          }*/
                   
       }
     

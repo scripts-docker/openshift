@@ -34,7 +34,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
           stage ('test'){
             
               sh '''
-                $(npm bin)/ng test --single-run --browsers Chrome_no_sandbox
+                $(npm bin)/ng test --single-run --code-coverage --browsers Chrome_no_sandbox
               '''
             
           }
@@ -45,7 +45,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
           }
 
           stage ('sonar') {
-              //sh("sonar-scanner -Dsonar.tests=src/app -Dsonar.test.inclusions=**/*.spec.ts -Dsonar.ts.tslint.configPath=tslint.json -Dsonar.sources=src/app -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.host.url=${SONAR} -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
+              sh("sonar-scanner -Dsonar.tests=src/app -Dsonar.test.inclusions=**/*.spec.ts -Dsonar.ts.tslint.configPath=tslint.json -Dsonar.sources=src/app -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.host.url=${SONAR} -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
           }
 
           stage ('build') {

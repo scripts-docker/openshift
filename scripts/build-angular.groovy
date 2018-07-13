@@ -82,6 +82,19 @@ podTemplate(label: label, cloud: 'openshift', containers: [
       }
     
   }
+
+stage('dddddd'){
+    input('Do you want to proceed?')
+}
+
+  node(label) {
+      container('jnlp') {
+
+           stage ('deploy hom') {
+               sh "echo FOI"
+           }
+      }
+  }
 }
 
 

@@ -61,12 +61,13 @@ podTemplate(label: label, cloud: 'openshift', containers: [
 
             writeFile(file:'package.json', text: json)
             
-            //  sh "echo \$'registry=${NEXUS_NPM_PUBLICO}\n//${NEXUS_NPM_PRIVADO}:_authToken=${NEXUS_NPM_TOKEN}\nstrict-ssl=false\nalways-auth=true' > $HOME/.npmr"
-              sh '''
+             sh "echo \$'registry=${NEXUS_NPM_PUBLICO}\n//${NEXUS_NPM_PRIVADO}:_authToken=${NEXUS_NPM_TOKEN}\nstrict-ssl=false\nalways-auth=true' > $HOME/.npmr"
+             sh "cat $HOME/.npmrc"
+             /* sh '''
                 cp package.json dist/
                 cd dist && npm publish
               '''
-            
+            */
           }
 
           stage ('build/deploy image') {

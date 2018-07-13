@@ -64,19 +64,18 @@ podTemplate(label: label, cloud: 'openshift', containers: [
             def npmPublico = "registry=${NEXUS_NPM_PUBLICO}"
             def npmPrivado = "//${NEXUS_NPM_PRIVADO}:_authToken=${NEXUS_NPM_TOKEN}"
             
-             sh "echo -e '$npmPublico\n$npmPrivado\nstrict-ssl=false\nalways-auth=true' > $HOME/.npmrc"
-             sh "cat $HOME/.npmrc"
-             /* sh '''
+            sh "echo -e '$npmPublico\n$npmPrivado\nstrict-ssl=false\nalways-auth=true' > $HOME/.npmrc"
+            
+            sh '''
                 cp package.json dist/
                 cd dist && npm publish
-              '''
-            */
+              '''            
           }
 
           stage ('build/deploy image') {
             
-            //  sh "oc start-build ${NOME_APLICACAO}  -e VERSAO-APLICACAO=${VERSAO} --build-arg URL_ARTEFATO_DOWNLOAD=${NEXUS_NPM_PRIVADO}${NOME_APLICACAO}/-/${NOME_APLICACAO}-${VERSAO}.tgz --build-arg ARTEFATO=${NOME_APLICACAO}-${VERSAO}.tgz --follow=true"
-            //  sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
+            sh "oc start-build ${NOME_APLICACAO}  -e VERSAO-APLICACAO=${VERSAO} --build-arg URL_ARTEFATO_DOWNLOAD=${NEXUS_NPM_PRIVADO}${NOME_APLICACAO}/-/${NOME_APLICACAO}-${VERSAO}.tgz --build-arg ARTEFATO=${NOME_APLICACAO}-${VERSAO}.tgz --follow=true"
+            sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
             
           }
                   

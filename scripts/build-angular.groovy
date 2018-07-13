@@ -2,7 +2,7 @@ import groovy.json.*
 import groovy.transform.Field
 
 def label = "pod-angular-${UUID.randomUUID().toString()}"
-def templateImage = "${REGISTRY_DOCKER}/ci/nodejs8-slave"
+def templateImage = "172.30.1.1:5000/ci/nodejs8-slave"
 
 @Field
 def jsonMap = null

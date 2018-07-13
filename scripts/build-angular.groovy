@@ -2,12 +2,13 @@ import groovy.json.*
 import groovy.transform.Field
 
 def label = "pod-angular-${UUID.randomUUID().toString()}"
+def templateImage = "${REGISTRY_DOCKER}/ci/nodejs8-slave"
 
 @Field
 def jsonMap = null
 
 podTemplate(label: label, cloud: 'openshift', containers: [    
-    containerTemplate(image: "${REGISTRY_DOCKER}/ci/nodejs8-slave", ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
+    containerTemplate(image: templateImage, ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
   ]) {
 
   node(label) {   

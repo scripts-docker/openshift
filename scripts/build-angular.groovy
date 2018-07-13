@@ -45,7 +45,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
           }
 
           stage ('sonar') {
-              sh("sonar-scanner -Dsonar.tests=src/app -Dsonar.test.inclusions=**/*.spec.ts -Dsonar.ts.tslint.configPath=tslint.json -Dsonar.sources=src/app -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.host.url=${SONAR} -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
+              //sh("sonar-scanner -Dsonar.tests=src/app -Dsonar.test.inclusions=**/*.spec.ts -Dsonar.ts.tslint.configPath=tslint.json -Dsonar.sources=src/app -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.host.url=${SONAR} -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
           }
 
           stage ('build') {
@@ -61,7 +61,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
 
             writeFile(file:'package.json', text: json)
             
-              sh "echo \$'registry=${NEXUS_NPM_PUBLICO}\n//${NEXUS_NPM_PRIVADO}:_authToken=${NEXUS_NPM_TOKEN}\nstrict-ssl=false\nalways-auth=true' > $HOME/.npmr"
+            //  sh "echo \$'registry=${NEXUS_NPM_PUBLICO}\n//${NEXUS_NPM_PRIVADO}:_authToken=${NEXUS_NPM_TOKEN}\nstrict-ssl=false\nalways-auth=true' > $HOME/.npmr"
               sh '''
                 cp package.json dist/
                 cd dist && npm publish
@@ -71,8 +71,8 @@ podTemplate(label: label, cloud: 'openshift', containers: [
 
           stage ('build/deploy image') {
             
-              sh "oc start-build ${NOME_APLICACAO}  -e VERSAO-APLICACAO=${VERSAO} --build-arg URL_ARTEFATO_DOWNLOAD=${NEXUS_NPM_PRIVADO}${NOME_APLICACAO}/-/${NOME_APLICACAO}-${VERSAO}.tgz --build-arg ARTEFATO=${NOME_APLICACAO}-${VERSAO}.tgz --follow=true"
-              sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
+            //  sh "oc start-build ${NOME_APLICACAO}  -e VERSAO-APLICACAO=${VERSAO} --build-arg URL_ARTEFATO_DOWNLOAD=${NEXUS_NPM_PRIVADO}${NOME_APLICACAO}/-/${NOME_APLICACAO}-${VERSAO}.tgz --build-arg ARTEFATO=${NOME_APLICACAO}-${VERSAO}.tgz --follow=true"
+            //  sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
             
           }
                   

@@ -60,8 +60,11 @@ podTemplate(label: label, cloud: 'openshift', containers: [
             json = JsonOutput.prettyPrint(json)
 
             writeFile(file:'package.json', text: json)
+
+            def npmPublico = "registry=${NEXUS_NPM_PUBLICO}"
+            def npmPrivado = "//${NEXUS_NPM_PRIVADO}:_authToken=${NEXUS_NPM_TOKEN}"
             
-             sh "echo \$'registry=${NEXUS_NPM_PUBLICO}\n//${NEXUS_NPM_PRIVADO}:_authToken=${NEXUS_NPM_TOKEN}\nstrict-ssl=false\nalways-auth=true' > $HOME/.npmr"
+             sh "echo -e '$npmPublico\n$npmPrivado\nstrict-ssl=false\nalways-auth=true' > $HOME/.npmr"
              sh "cat $HOME/.npmrc"
              /* sh '''
                 cp package.json dist/

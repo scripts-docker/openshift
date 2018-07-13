@@ -74,7 +74,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
 
           stage ('build/deploy image') {
             
-            sh "oc start-build ${NOME_APLICACAO}  -e VERSAO-APLICACAO=${VERSAO} --build-arg URL_ARTEFATO_DOWNLOAD=${NEXUS_NPM_PRIVADO}${NOME_APLICACAO}/-/${NOME_APLICACAO}-${VERSAO}.tgz --build-arg ARTEFATO=${NOME_APLICACAO}-${VERSAO}.tgz --follow=true"
+            sh "oc start-build ${NOME_APLICACAO}  -e VERSAO_APLICACAO=${VERSAO} --build-arg URL_ARTEFATO_DOWNLOAD=http://${NEXUS_NPM_PRIVADO}${NOME_APLICACAO}/-/${NOME_APLICACAO}-${VERSAO}.tgz --build-arg ARTEFATO=${NOME_APLICACAO}-${VERSAO}.tgz --follow=true"
             sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
             
           }

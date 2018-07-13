@@ -7,10 +7,8 @@ def templateImage = "${REGISTRY_DOCKER}/ci/nodejs8-slave"
 @Field
 def jsonMap = null
 
-sh("echo $templateImage")
-
 podTemplate(label: label, cloud: 'openshift', containers: [    
-    containerTemplate(image: templateImage, ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
+    containerTemplate(image: '$templateImage', ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
   ]) {
 
   node(label) {   

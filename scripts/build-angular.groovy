@@ -8,7 +8,7 @@ def templateImage = "172.30.1.1:5000/ci/nodejs8-slave"
 def jsonMap = null
 
 podTemplate(label: label, cloud: 'openshift', containers: [    
-    containerTemplate(image: templateImage, ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
+    containerTemplate(image: '172.30.1.1:5000/ci/nodejs8-slave', ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
   ]) {
 
   node(label) {   

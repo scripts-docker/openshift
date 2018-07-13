@@ -7,7 +7,7 @@ def label = "pod-angular-${UUID.randomUUID().toString()}"
 def jsonMap = null
 
 podTemplate(label: label, cloud: 'openshift', containers: [    
-    containerTemplate(image: '172.30.1.1:5000/ci/nodejs8-slave', ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
+    containerTemplate(image: "${REGISTRY_DOCKER}/ci/nodejs8-slave", ttyEnabled: false, name: 'jnlp',args: '${computer.jnlpmac} ${computer.name}')
   ]) {
 
   node(label) {   
@@ -43,9 +43,8 @@ podTemplate(label: label, cloud: 'openshift', containers: [
             
           }
 
-        stage ('sonar') {
-              sh("printenv")
-              sh("sonar-scanner -Dsonar.tests=src/app -Dsonar.test.inclusions=**/*.spec.ts -Dsonar.ts.tslint.configPath=tslint.json -Dsonar.sources=src/app -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.host.url=http://172.30.11.175:9000 -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
+          stage ('sonar') {
+              sh("sonar-scanner -Dsonar.tests=src/app -Dsonar.test.inclusions=**/*.spec.ts -Dsonar.ts.tslint.configPath=tslint.json -Dsonar.sources=src/app -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.host.url=${SONAR} -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
           }
 
           stage ('build') {
@@ -61,17 +60,17 @@ podTemplate(label: label, cloud: 'openshift', containers: [
 
             writeFile(file:'package.json', text: json)
             
+              sh "echo $'registry=${NEXUS_NPM_PUBLICO}\n//${NEXUS_NPM_PRIVADO}:_authToken=${NEXUS_NPM_TOKEN}\nstrict-ssl=false\nalways-auth=true' > $HOME/.npmr"
               sh '''
-                curl -o $HOME/.npmrc https://raw.githubusercontent.com/scripts-docker/openshift/master/.npmrc
                 cp package.json dist/
                 cd dist && npm publish
               '''
             
           }
 
-          stage ('build image') {
+          stage ('build/deploy image') {
             
-              sh "oc start-build ${NOME_APLICACAO} --follow=true"
+              sh "oc start-build ${NOME_APLICACAO}  -e VERSAO-APLICACAO=${VERSAO} --build-arg URL_ARTEFATO_DOWNLOAD=${NEXUS_NPM_PRIVADO}${NOME_APLICACAO}/-/${NOME_APLICACAO}-${VERSAO}.tgz --build-arg ARTEFATO=${NOME_APLICACAO}-${VERSAO}.tgz --follow=true"
               sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
             
           }

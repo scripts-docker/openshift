@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: build-image-stream-angular
+message: |-
+  build
+metadata:
+  annotations:
+    openshift.io/display-name: Build Imagem Stream - Angular
+    description: |-
+      Configuraçĩes de Build e Imagem Stream para aplicações Angular.
+    iconClass: icon-angularjs
+    tags: build-image-stream-angular
+  name: build-image-stream-angular
+parameters:
+- description: Nome da aplicação (artifact-id ou name do package.json).
+  displayName: Nome da aplicação
+  name: NOME_APLICACAO
+  required: true
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: ${NOME_APLICACAO}
+    name: ${NOME_APLICACAO}
+    namespace: ci
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${NOME_APLICACAO}:latest
+    resources: {}
+    source:
+      git:
+        ref: master
+        uri: https://github.com/scripts-docker/app-frontend.git
+      type: Git
+    strategy:
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: nginx-base:latest
+          namespace: ci
+      type: Docker
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Stream da imagem que rastreia as alterações na imagem
+    name: ${NOME_APLICACAO}
+    namespace: ci

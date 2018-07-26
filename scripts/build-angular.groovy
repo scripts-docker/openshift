@@ -74,6 +74,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
 
                 stage ('build/deploy dev') {
                     
+                    sh 'oc project ss-vida'
                     sh "oc start-build ${NOME_APLICACAO} -e VERSAO_APLICACAO=${VERSAO} --build-arg URL_ARTEFATO_DOWNLOAD=http://${NEXUS_NPM_PRIVADO}${NOME_APLICACAO}/-/${NOME_APLICACAO}-${VERSAO}.tgz --build-arg ARTEFATO=${NOME_APLICACAO}-${VERSAO}.tgz --follow=true"
                     sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
                     sh "oc tag ${NOME_APLICACAO}:${VERSAO} ${NOME_APLICACAO}:dev"

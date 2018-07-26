@@ -16,7 +16,7 @@ metadata:
       leverages the underlying OpenShift platform for dynamic and scalable
       builds. OpenShift integrates the status of your pipeline builds into the web
       console allowing you to see your entire application lifecycle in a single view.
-    iconClass: icon-jenkins
+    iconClass: icon-angularjs
     tags: instant-app,angular
   name: pipeline-aplicacoes-angular
 parameters:
@@ -24,17 +24,12 @@ parameters:
   displayName: Nome da aplicação
   name: NOME_APLICACAO
   required: true
-- description: OpenShift Namespace da ImageStreams.
-  displayName: Namespace
-  name: NAMESPACE
-  required: true
-  value: openshift
 objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
     annotations:
-      pipeline.alpha.openshift.io/uses: '[{"name": "${NOME_APLICACAO}-pipeline", "namespace": "${NAMESPACE}", "kind": "DeploymentConfig"}]'
+      pipeline.alpha.openshift.io/uses: '[{"name": "${NOME_APLICACAO}-pipeline", "kind": "DeploymentConfig"}]'
     labels:
       name: ${NOME_APLICACAO}-pipeline
     name: ${NOME_APLICACAO}-pipeline

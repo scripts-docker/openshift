@@ -35,31 +35,6 @@ parameters:
   required: true
 objects:
 - apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    labels:
-      app: ${NOME_APLICACAO}
-    name: ${NOME_APLICACAO}
-    namespace: ci
-  spec:
-    output:
-      to:
-        kind: ImageStreamTag
-        name: ${NOME_APLICACAO}:latest
-    resources: {}
-    source:
-      git:
-        ref: master
-        uri: ${URL_REPOSITORIO_CONFIG}
-      type: Git
-    strategy:
-      dockerStrategy:
-        from:
-          kind: ImageStreamTag
-          name: nginx-base:latest
-          namespace: ci
-      type: Docker
-- apiVersion: v1
   kind: Service
   metadata:
     annotations:
@@ -100,13 +75,6 @@ objects:
       host: ${NOME_APLICACAO}-dev.127.0.0.1.nip.io
       routerName: router
       wildcardPolicy: None
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    annotations:
-      description: Keeps track of changes in the application image
-    name: ${NOME_APLICACAO}
-    namespace: ci
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:

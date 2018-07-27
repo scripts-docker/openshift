@@ -92,7 +92,9 @@ podTemplate(label: label, cloud: 'openshift', containers: [
         node(label) {
             container('jnlp') {
                 stage ('deploy homologação') {
-                   sh "oc tag ${NOME_APLICACAO}:${VERSAO} ${NOME_APLICACAO}:hom"
+
+                    sh "oc project ${PROJETO}"
+                    sh "oc tag ${NOME_APLICACAO}:${VERSAO} ${NOME_APLICACAO}:hom"
                 }
             }
         }

@@ -15,7 +15,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
       
             container('jnlp') {
 
-                /*stage ('checkout'){
+                stage ('checkout'){
                     git "${URL_REPOSITORIO_APP}"
 
                     def packageJson = readFile(file:'package.json')
@@ -45,7 +45,7 @@ podTemplate(label: label, cloud: 'openshift', containers: [
                 }
 
                 stage ('sonar') {
-                    sh("sonar-scanner -Dsonar.tests=src/app -Dsonar.test.inclusions=**\/*.spec.ts -Dsonar.ts.tslint.configPath=tslint.json -Dsonar.sources=src/app -Dsonar.exclusions=**\/node_modules/**,**\/*.spec.ts -Dsonar.host.url=${SONAR} -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
+                    sh("sonar-scanner -Dsonar.tests=src/app -Dsonar.test.inclusions=**/*.spec.ts -Dsonar.ts.tslint.configPath=tslint.json -Dsonar.sources=src/app -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.host.url=${SONAR} -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info -Dsonar.projectKey=${jsonMap.name} -Dsonar.projectName='${jsonMap.description}' -Dsonar.projectVersion=${VERSAO}")
                 }
 
                 stage ('build') {
@@ -70,14 +70,14 @@ podTemplate(label: label, cloud: 'openshift', containers: [
                         cp package.json dist/
                         cd dist && npm publish
                     '''            
-                }*/
+                }
 
                 stage ('build/deploy dev') {
                     
-                    sh 'oc project ss-vida'
-                    //sh "oc start-build ${NOME_APLICACAO} -e VERSAO_APLICACAO=${VERSAO} --build-arg URL_ARTEFATO_DOWNLOAD=http://${NEXUS_NPM_PRIVADO}${NOME_APLICACAO}/-/${NOME_APLICACAO}-${VERSAO}.tgz --build-arg ARTEFATO=${NOME_APLICACAO}-${VERSAO}.tgz --follow=true"
-                    //sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
-                    //sh "oc tag ${NOME_APLICACAO}:${VERSAO} ${NOME_APLICACAO}:dev"
+                    sh "oc project ${PROJETO}"
+                    sh "oc start-build ${NOME_APLICACAO} -e VERSAO_APLICACAO=${VERSAO} --build-arg URL_ARTEFATO_DOWNLOAD=http://${NEXUS_NPM_PRIVADO}${NOME_APLICACAO}/-/${NOME_APLICACAO}-${VERSAO}.tgz --build-arg ARTEFATO=${NOME_APLICACAO}-${VERSAO}.tgz --follow=true"
+                    sh "oc tag ${NOME_APLICACAO}:latest ${NOME_APLICACAO}:${VERSAO}"
+                    sh "oc tag ${NOME_APLICACAO}:${VERSAO} ${NOME_APLICACAO}:dev"
                     
                 }
                         

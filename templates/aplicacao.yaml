@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: aplicacoes-angular
+  template: aplicacoes-angular-teste
 message: |-
   A Jenkins server will be automatically instantiated in this project to manage
   the Pipeline BuildConfig created by this template.  You will be able to log in to
   it using your OpenShift user credentials.
 metadata:
   annotations:
-    openshift.io/display-name: Aplicações Angular
+    openshift.io/display-name: Aplicações Angular Teste
     description: |-
       This example showcases the new Jenkins Pipeline integration in OpenShift,
       which performs continuous integration and deployment right on the platform.
@@ -17,8 +17,8 @@ metadata:
       builds. OpenShift integrates the status of your pipeline builds into the web
       console allowing you to see your entire application lifecycle in a single view.
     iconClass: icon-angularjs
-    tags: instant-app,jenkins
-  name: jenkins-pipeline-angular
+    tags: instant-app-teste,jenkins
+  name: jenkins-pipeline-angular-teste
 parameters:
 - description: The name assigned to all of the frontend objects defined in this template.
   displayName: Nome da aplicação
@@ -35,36 +35,11 @@ parameters:
   required: true
 objects:
 - apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    labels:
-      app: ${NOME_APLICACAO}
-    name: ${NOME_APLICACAO}
-    namespace: ${NAMESPACE}
-  spec:
-    output:
-      to:
-        kind: ImageStreamTag
-        name: ${NOME_APLICACAO}:latest
-    resources: {}
-    source:
-      git:
-        ref: master
-        uri: ${URL_REPOSITORIO_CONFIG}
-      type: Git
-    strategy:
-      dockerStrategy:
-        from:
-          kind: ImageStreamTag
-          name: nginx-base:latest
-          namespace: ci
-      type: Docker
-- apiVersion: v1
   kind: Service
   metadata:
     annotations:
-      service.alpha.openshift.io/dependencies: '[{"name": "${NOME_APLICACAO}", "namespace": "${NAMESPACE}", "kind": "Service"}]'
-    name: ${NOME_APLICACAO}
+      service.alpha.openshift.io/dependencies: '[{"name": "${NOME_APLICACAO}-dev", "namespace": "${NAMESPACE}", "kind": "Service"}]'
+    name: ${NOME_APLICACAO}-dev
   spec:
     ports:
     - name: 8080-tcp
@@ -72,7 +47,7 @@ objects:
       protocol: TCP
       targetPort: 8080
     selector:
-      name: ${NOME_APLICACAO}
+      name: ${NOME_APLICACAO}-dev
 - apiVersion: v1
   kind: Route
   metadata:
@@ -80,15 +55,15 @@ objects:
       openshift.io/host.generated: "true"
     creationTimestamp: null
     labels:
-      app: ${NOME_APLICACAO}
-    name: ${NOME_APLICACAO}
+      app: ${NOME_APLICACAO}-dev
+    name: ${NOME_APLICACAO}-dev
   spec:
-    host: ${NOME_APLICACAO}-${NAMESPACE}.nip.io
+    host: ${NOME_APLICACAO}-dev.127.0.0.1.nip.io
     port:
       targetPort: 8080-tcp
     to:
       kind: Service
-      name: ${NOME_APLICACAO}
+      name: ${NOME_APLICACAO}-dev
       weight: 100
     wildcardPolicy: None
   status:
@@ -97,31 +72,25 @@ objects:
       - lastTransitionTime: 2018-01-05T09:32:19Z
         status: "True"
         type: Admitted
-      host: ${NOME_APLICACAO}-${NAMESPACE}.nip.io
+      host: ${NOME_APLICACAO}-dev.127.0.0.1.nip.io
       routerName: router
       wildcardPolicy: None
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    annotations:
-      description: Keeps track of changes in the application image
-    name: ${NOME_APLICACAO}
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewApp
       description: Defines how to deploy the application server
-    name: ${NOME_APLICACAO}
+    name: ${NOME_APLICACAO}-dev
     labels:
-      app: ${NOME_APLICACAO}
+      app: ${NOME_APLICACAO}-dev
   spec:
     replicas: 1
     revisionHistoryLimit: 10
     selector:
-      name: ${NOME_APLICACAO}
-      app: ${NOME_APLICACAO}
-      deploymentconfig: ${NOME_APLICACAO}
+      name: ${NOME_APLICACAO}-dev
+      app: ${NOME_APLICACAO}-dev
+      deploymentconfig: ${NOME_APLICACAO}-dev
     strategy:
       activeDeadlineSeconds: 21600
       resources: {}
@@ -137,10 +106,10 @@ objects:
         annotations:
           openshift.io/generated-by: OpenShiftNewApp
         labels:
-          name: ${NOME_APLICACAO}
-          app: ${NOME_APLICACAO}
-          deploymentconfig: ${NOME_APLICACAO}
-        name: ${NOME_APLICACAO}
+          name: ${NOME_APLICACAO}-dev
+          app: ${NOME_APLICACAO}-dev
+          deploymentconfig: ${NOME_APLICACAO}-dev
+        name: ${NOME_APLICACAO}-dev
       spec:
         containers:
         - image: 172.30.1.1:5000/${NAMESPACE}/${NOME_APLICACAO}
@@ -188,8 +157,141 @@ objects:
         - ${NOME_APLICACAO}
         from:
           kind: ImageStreamTag
-          name: ${NOME_APLICACAO}:latest
-          namespace: ci
+          name: ${NOME_APLICACAO}:dev
+          namespace: ${NAMESPACE}
+      type: ImageChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      service.alpha.openshift.io/dependencies: '[{"name": "${NOME_APLICACAO}-hom", "namespace": "${NAMESPACE}", "kind": "Service"}]'
+    name: ${NOME_APLICACAO}-hom
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: ${NOME_APLICACAO}-hom
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: ${NOME_APLICACAO}-hom
+    name: ${NOME_APLICACAO}-hom
+  spec:
+    host: ${NOME_APLICACAO}-hom.127.0.0.1.nip.io
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: ${NOME_APLICACAO}-hom
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-01-05T09:32:19Z
+        status: "True"
+        type: Admitted
+      host: ${NOME_APLICACAO}-hom.127.0.0.1.nip.io
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+      description: Defines how to deploy the application server
+    name: ${NOME_APLICACAO}-hom
+    labels:
+      app: ${NOME_APLICACAO}-hom
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      name: ${NOME_APLICACAO}-hom
+      app: ${NOME_APLICACAO}-hom
+      deploymentconfig: ${NOME_APLICACAO}-hom
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        labels:
+          name: ${NOME_APLICACAO}-hom
+          app: ${NOME_APLICACAO}-hom
+          deploymentconfig: ${NOME_APLICACAO}-hom
+        name: ${NOME_APLICACAO}-hom
+      spec:
+        containers:
+        - image: 172.30.1.1:5000/${NAMESPACE}/${NOME_APLICACAO}
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 100
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: ${NOME_APLICACAO}
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /hom/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${NOME_APLICACAO}
+        from:
+          kind: ImageStreamTag
+          name: ${NOME_APLICACAO}:hom
+          namespace: ${NAMESPACE}
       type: ImageChange
   status:
     availableReplicas: 0
